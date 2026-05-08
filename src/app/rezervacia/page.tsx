@@ -39,6 +39,7 @@ function Stars({ count }: { count: number }) {
 
 export default function RezervaciaPage() {
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError]         = useState(false)
   const [form, setForm] = useState({ name: '', phone: '', date: '', notes: '' })
   const [loading, setLoading] = useState(false)
 
@@ -49,18 +50,23 @@ export default function RezervaciaPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
+    setError(false)
     try {
       const data = new FormData(e.currentTarget)
       const body = new URLSearchParams()
       data.forEach((value, key) => body.append(key, value.toString()))
-      await fetch('/', {
+      const res = await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: body.toString(),
       })
-      setSubmitted(true)
+      if (res.ok) {
+        setSubmitted(true)
+      } else {
+        setError(true)
+      }
     } catch {
-      setSubmitted(true)
+      setError(true)
     } finally {
       setLoading(false)
     }
@@ -144,6 +150,15 @@ export default function RezervaciaPage() {
         </div>
 
         {/* ── Contact Form ─────────────────────────────────────────────── */}
+        {error && (
+          <div className="glass-card rounded-2xl p-5 mb-5 border border-red-500/40 text-center">
+            <p className="text-red-400 font-bold mb-1">Грешка при изпращане</p>
+            <p className="text-brand-light/60 text-sm">
+              Моля обади се директно на{' '}
+              <a href="tel:+359884665348" className="text-green-400 font-bold">+359 884 665 348</a>
+            </p>
+          </div>
+        )}
         {submitted ? (
           <div className="glass-card rounded-2xl p-10 text-center">
             <div className="text-6xl mb-4">🎉</div>
