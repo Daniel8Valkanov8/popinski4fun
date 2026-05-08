@@ -46,22 +46,19 @@ export default function RezervaciaPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
     try {
-      const body = new URLSearchParams({
-        'form-name': 'rezervacia',
-        ...form,
-      })
-      const res = await fetch('/', {
+      const data = new FormData(e.currentTarget)
+      const body = new URLSearchParams()
+      data.forEach((value, key) => body.append(key, value.toString()))
+      await fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: body.toString(),
       })
-      if (res.ok) {
-        setSubmitted(true)
-      }
+      setSubmitted(true)
     } catch {
       setSubmitted(true)
     } finally {
