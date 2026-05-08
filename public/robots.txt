@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Block landing/ad page from being indexed (conversion-only page)
+Disallow: /rezervacia
+
+# Allow everything else
+Allow: /hero/
+Allow: /galeria
+Allow: /kontakti
+
+Sitemap: https://popinski4fun.com/sitemap.xml
