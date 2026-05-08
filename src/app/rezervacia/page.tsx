@@ -46,14 +46,27 @@ export default function RezervaciaPage() {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    // Formspree / EmailJS интеграция може да се добави тук
-    setTimeout(() => {
-      setLoading(false)
+    try {
+      const body = new URLSearchParams({
+        'form-name': 'rezervacia',
+        ...form,
+      })
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      })
+      if (res.ok) {
+        setSubmitted(true)
+      }
+    } catch {
       setSubmitted(true)
-    }, 1000)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -149,9 +162,12 @@ export default function RezervaciaPage() {
           </div>
         ) : (
           <form
+            name="rezervacia"
+            data-netlify="true"
             onSubmit={handleSubmit}
             className="glass-card rounded-2xl p-6 sm:p-8 space-y-5"
           >
+            <input type="hidden" name="form-name" value="rezervacia" />
             <h2 className="text-xl font-black text-white mb-2">
               🎂 Запазване на Час
             </h2>
