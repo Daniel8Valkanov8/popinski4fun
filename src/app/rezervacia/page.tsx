@@ -55,7 +55,7 @@ export default function RezervaciaPage() {
       const data = new FormData(e.currentTarget)
       const body = new URLSearchParams()
       data.forEach((value, key) => body.append(key, value.toString()))
-      const res = await fetch('/', {
+      const res = await fetch('/netlify-forms.html', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: body.toString(),
